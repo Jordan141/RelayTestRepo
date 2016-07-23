@@ -81,7 +81,15 @@ namespace frmInsurance
                 MessageBox.Show("Please enter a name for the driver.");
             }
         }
+        private int CalculateAge(DateTime bday)
+        {
+            DateTime today = new DateTime();
 
+            int age = today.Year - bday.Year;
+            if (bday > today.AddYears(-age))
+                age--;
+            return age;
+        }
         private void dtpPolicyStart_ValueChanged(object sender, EventArgs e)
         {
             if(dtpPolicyStart.Value.Date < DateTime.Now.Date)
@@ -97,10 +105,10 @@ namespace frmInsurance
         private double calculatePremium(Driver d)
         {
             double premium = 500.00;
-
+            int age = CalculateAge(d.DateOfBirth);
 
             ///Occupation check
-            if(d.Occupation == "Accountant")
+            if (d.Occupation == "Accountant")
             {
                 premium = premium - (premium / 100 * 10);
             }
@@ -109,7 +117,10 @@ namespace frmInsurance
                 premium = premium + (premium / 100 * 10);
             }
 
-            if()
+            if(Enumerable.Range(21, 4).Contains(age))
+            {
+                
+            }
         }
     }
 }
