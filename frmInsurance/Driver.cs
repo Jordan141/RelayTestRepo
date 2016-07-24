@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace frmInsurance
 {
-    class Driver
+    public class Driver
     {
         private String strName;
         private String strOccupation;
@@ -78,6 +78,13 @@ namespace frmInsurance
             {
                 dtClaims.Add(dClaim);
             }
+        }
+        public Driver()
+        {
+            Name = "John Smith";
+            Occupation = "Accountant";
+            dtDateOfBirth = DateTime.Now;
+
         }
     }
 }

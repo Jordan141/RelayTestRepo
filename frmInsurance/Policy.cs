@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace frmInsurance
 {
-    class Policy
+    public class Policy
     {
         private DateTime startDate;
         private List<Driver> DriverList = new List<Driver>();
@@ -30,6 +30,12 @@ namespace frmInsurance
         public void AddCompletedDriver(Driver d)
         {
             DriverList.Add(d);
+        }
+
+        public Policy()
+        {
+            StartDate = DateTime.Now;
+            Premium = 0;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace frmInsurance
             if (!String.IsNullOrWhiteSpace(txtName.Text))
             {
                 driver.AddClaim(dpDateOfClaim.Value);
-                rtbCalculation.AppendText("Driver Name - " + txtName.Text + "\nClaim No." + (driver.Claims.Count) + " - " + dpDateOfClaim.Value.Date + "\n");
+                rtbCalculation.AppendText("Driver Name - " + txtName.Text + "\nClaim No." + (driver.Claims.Count) + " - " + dpDateOfClaim.Value.Date.ToShortDateString() + "\n");
             }else
             {
                 MessageBox.Show("Please enter driver details");
@@ -82,7 +82,7 @@ namespace frmInsurance
                                     {
                                         policy.AddCompletedDriver(driver);
                                         policy.Premium = calculatePremium(driver);
-
+                                        btnSave.Enabled = true;
                                         //Reset the variables
                                         ResetInputs();
                                     }
@@ -154,7 +154,7 @@ namespace frmInsurance
             
             gbAddDriver.Enabled = true;
             policy.StartDate = dtpPolicyStart.Value.Date;
-            rtbCalculation.Text = ("Policy Start Date - " + policy.StartDate.Date + "\n\n");
+            rtbCalculation.Text = ("Policy Start Date - " + policy.StartDate.Date.ToShortDateString() + "\n\n");
         }
 
         private double calculatePremium(Driver d)
@@ -221,6 +221,58 @@ namespace frmInsurance
             {
                 dpDateOfBirth.Enabled = false;
             }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Xml.Serialization.XmlSerializer writer =
+                new System.Xml.Serialization.XmlSerializer(typeof(Policy));
+
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//Policies.xml";
+                System.IO.FileStream file = System.IO.File.Create(path);
+
+                writer.Serialize(file, policy);
+                file.Close();
+            }catch(Exception ex)
+            {
+                MessageBox.Show("Error saving file - " + ex.ToString());
+            }
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {try
+            {
+                System.Xml.Serialization.XmlSerializer reader =
+            new System.Xml.Serialization.XmlSerializer(typeof(Policy));
+
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//Policies.xml";
+
+                System.IO.StreamReader file = new System.IO.StreamReader(path);
+                policy = (Policy)reader.Deserialize(file);
+                file.Close();
+
+                rtbCalculation.Text = ("Policy Start Date : " + policy.StartDate.ToShortDateString() + "\n\nPolicy Premium: £" + policy.Premium.ToString());
+                foreach (Driver d in policy.Drivers)
+                {
+                    rtbCalculation.AppendText("\nDriver:");
+                    rtbCalculation.AppendText("\n\tName: " + d.Name + "\n\tOccupation: " + d.Occupation + "\n\tDate Of Birth: " + d.DateOfBirth.ToShortDateString());
+                    for (int i = 0; i < d.Claims.Count; i++)
+                    {
+                        rtbCalculation.AppendText("\n\tClaim: " + d.Claims[i].ToShortDateString());
+                    }
+                }
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                MessageBox.Show("File not found");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.ToString());
+            }
+
         }
     }
 }

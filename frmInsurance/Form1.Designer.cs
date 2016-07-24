@@ -53,6 +53,8 @@
             this.lblTitle2 = new System.Windows.Forms.Label();
             this.lblTip = new System.Windows.Forms.Label();
             this.lblTip2 = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.gbAddDriver.SuspendLayout();
             this.gbClaim.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ep1)).BeginInit();
@@ -282,12 +284,36 @@
             this.lblTip2.TabIndex = 10;
             this.lblTip2.Text = "Each with no more that 5 claims.";
             // 
+            // btnSave
+            // 
+            this.btnSave.Enabled = false;
+            this.btnSave.Location = new System.Drawing.Point(369, 567);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(91, 27);
+            this.btnSave.TabIndex = 11;
+            this.btnSave.Text = "Save Policy";
+            this.toolTip1.SetToolTip(this.btnSave, "Save the data to XML");
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.Location = new System.Drawing.Point(281, 567);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(82, 27);
+            this.btnLoad.TabIndex = 12;
+            this.btnLoad.Text = "Load Policy";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(849, 602);
+            this.Controls.Add(this.btnLoad);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.lblTip2);
             this.Controls.Add(this.lblTip);
             this.Controls.Add(this.lblTitle2);
@@ -341,6 +367,8 @@
         private System.Windows.Forms.Label lblDriver;
         private System.Windows.Forms.RichTextBox rtbCalculation;
         private System.Windows.Forms.RichTextBox rtbDriverInfo;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnLoad;
     }
 }
 
