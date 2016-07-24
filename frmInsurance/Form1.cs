@@ -45,8 +45,15 @@ namespace frmInsurance
         {
             if (!String.IsNullOrWhiteSpace(txtName.Text))
             {
-                driver.AddClaim(dpDateOfClaim.Value);
-                rtbCalculation.AppendText("Driver Name - " + txtName.Text + "\nClaim No." + (driver.Claims.Count) + " - " + dpDateOfClaim.Value.Date.ToShortDateString() + "\n");
+                if (driver.Claims.Count + 1 <= 5)
+                {
+                    driver.AddClaim(dpDateOfClaim.Value);
+                    rtbCalculation.AppendText("Driver Name - " + txtName.Text + "\nClaim No." + (driver.Claims.Count) + " - " + dpDateOfClaim.Value.Date.ToShortDateString() + "\n");
+                }
+                else
+                {
+                    MessageBox.Show("Driver cannot have more than 5 claims");
+                }
             }else
             {
                 MessageBox.Show("Please enter driver details");
