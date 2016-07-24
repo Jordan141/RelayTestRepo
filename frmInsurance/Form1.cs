@@ -14,7 +14,7 @@ namespace frmInsurance
     {
         private Policy policy = new Policy();
         private Driver driver = new Driver();
-
+        
 
         public frmMain()
         {
@@ -61,10 +61,54 @@ namespace frmInsurance
                 {
                     if(dpDateOfBirth.Value.Date < DateTime.Now.Date)
                     {
-                        driver.Name = txtName.Text;
-                        driver.Occupation = cbOccupation.SelectedItem.ToString();
-                        driver.DateOfBirth = dpDateOfBirth.Value.Date;
+                        if (Enumerable.Range(21,54).Contains(YearsBetween(dpDateOfBirth.Value.Date)))
+                        {
+                            if (driver.Claims.Count <= 2)
+                            {
+                                int Claims = driver.Claims.Count;
+                                foreach(Driver d in policy.Drivers)
+                                {
+                                    Claims += d.Claims.Count;
+                                }
+                                if (Claims < 3)
+                                {
+                                    driver.Name = txtName.Text;
+                                    driver.Occupation = cbOccupation.SelectedItem.ToString();
+                                    driver.DateOfBirth = dpDateOfBirth.Value.Date;
 
+                                    rtbDriverInfo.Text = ("Driver Information\nName: " + driver.Name + "\nOccupation: " + driver.Occupation + "Age: " + YearsBetween(driver.DateOfBirth));
+
+                                    if (policy.Drivers.Count <= 5)
+                                    {
+                                        policy.AddCompletedDriver(driver);
+                                        policy.Premium = calculatePremium(driver);
+
+                                        //Reset the variables
+                                        ResetInputs();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("You have exceeded the maximum limit of drivers per policy.");
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Policy has more than 3 claims","Policy Declined");
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Driver has more than 2 claims - " + txtName.Text,"Driver Declined");
+                            }
+                        }
+                        else if(YearsBetween(dpDateOfBirth.Value.Date) < 21)
+                        {
+                            MessageBox.Show("Age of Youngest Driver - " + txtName.Text, "Driver Declined");
+                        }
+                        else if(YearsBetween(dpDateOfBirth.Value.Date) > 75)
+                        {
+                            MessageBox.Show("Age of Oldest Driver - " + txtName.Text, "Driver Declined");
+                        }
                     }
                     else
                     {
@@ -80,13 +124,23 @@ namespace frmInsurance
             {
                 MessageBox.Show("Please enter a name for the driver.");
             }
+            ResetInputs();
         }
-        private int CalculateAge(DateTime bday)
+        private void ResetInputs()
         {
-            DateTime today = new DateTime();
+            driver = new Driver();
+            txtName.Clear();
+            cbOccupation.ResetText();
+            dpDateOfBirth.ResetText();
+            dpDateOfClaim.ResetText();
+        }
+        private int YearsBetween(DateTime bday)
+        {
+            //Checks against policy startdate
+            DateTime ageOnStart = policy.StartDate;
 
-            int age = today.Year - bday.Year;
-            if (bday > today.AddYears(-age))
+            int age = ageOnStart.Year - bday.Year;
+            if (bday > ageOnStart.AddYears(-age))
                 age--;
             return age;
         }
@@ -102,24 +156,70 @@ namespace frmInsurance
             policy.StartDate = dtpPolicyStart.Value.Date;
             rtbCalculation.Text = ("Policy Start Date - " + policy.StartDate.Date + "\n\n");
         }
+
         private double calculatePremium(Driver d)
         {
             double premium = 500.00;
-            int age = CalculateAge(d.DateOfBirth);
+            int age = YearsBetween(d.DateOfBirth);
 
+            rtbCalculation.AppendText("Premiuim standard cost - £500.00\nDriver Occupation:\n");
             ///Occupation check
             if (d.Occupation == "Accountant")
             {
                 premium = premium - (premium / 100 * 10);
+                rtbCalculation.AppendText("After Occupation costs - £" + premium + "\n");
             }
             else if (d.Occupation == "Chauffeur")
             {
                 premium = premium + (premium / 100 * 10);
+                rtbCalculation.AppendText("After Occupation costs - £" + premium + "\n");
             }
 
             if(Enumerable.Range(21, 4).Contains(age))
             {
-                
+                premium = premium + (premium / 100 * 20);
+                rtbCalculation.AppendText("Age - " + age + " - Premium is now £" + premium + "\n");
+            }
+            else if (Enumerable.Range(26, 49).Contains(age))
+            {
+                premium = premium - (premium / 100 * 10);
+            }
+            for (int i = 0; i < d.Claims.Count; i++)
+            {
+                if(YearsBetween(d.Claims[i].Date) <= 1)
+                {
+                    premium = premium + (premium / 100 * 20);
+                    rtbCalculation.AppendText("Your claim is within a year of the start date, Premium increased by 20% - £" + premium);
+                }
+                else if (Enumerable.Range(2, 3).Contains(YearsBetween(d.Claims[i].Date))){
+                    premium = premium + (premium / 100 * 10);
+                    rtbCalculation.AppendText("Your claim is within 2-5 years of start date, Premium increased by 10% - £" + premium);
+                }
+            }
+            return premium;
+        }
+
+        private void txtName_TextChanged(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrWhiteSpace(txtName.Text))
+            {
+                cbOccupation.Enabled = true;
+            }
+            else
+            {
+                cbOccupation.Enabled = false;
+            }
+        }
+
+        private void cbOccupation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrWhiteSpace(cbOccupation.SelectedItem.ToString()))
+            {
+                dpDateOfBirth.Enabled = true;
+            }
+            else
+            {
+                dpDateOfBirth.Enabled = false;
             }
         }
     }

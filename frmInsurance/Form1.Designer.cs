@@ -161,6 +161,7 @@
             // 
             // dpDateOfBirth
             // 
+            this.dpDateOfBirth.Enabled = false;
             this.dpDateOfBirth.Location = new System.Drawing.Point(98, 110);
             this.dpDateOfBirth.Name = "dpDateOfBirth";
             this.dpDateOfBirth.Size = new System.Drawing.Size(200, 23);
@@ -177,6 +178,7 @@
             // 
             // cbOccupation
             // 
+            this.cbOccupation.Enabled = false;
             this.cbOccupation.FormattingEnabled = true;
             this.cbOccupation.Items.AddRange(new object[] {
             "Accountant",
@@ -185,6 +187,7 @@
             this.cbOccupation.Name = "cbOccupation";
             this.cbOccupation.Size = new System.Drawing.Size(200, 23);
             this.cbOccupation.TabIndex = 3;
+            this.cbOccupation.SelectedIndexChanged += new System.EventHandler(this.cbOccupation_SelectedIndexChanged);
             // 
             // lblOccupation
             // 
@@ -201,6 +204,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(200, 23);
             this.txtName.TabIndex = 1;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // lblName
             // 

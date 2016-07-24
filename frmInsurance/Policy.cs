@@ -9,19 +9,27 @@ namespace frmInsurance
     class Policy
     {
         private DateTime startDate;
-        private Driver[] DriverList = new Driver[4];
-
+        private List<Driver> DriverList = new List<Driver>();
+        private double dbPremium;
 
         public DateTime StartDate
         {
             get { return startDate; }
             set { startDate = value; }
         }
-        public Driver[] Drivers
+        public List<Driver> Drivers
         {
             get { return DriverList; }
             set { DriverList = value; }
         }
-
+        public double Premium
+        {
+            get { return dbPremium; }
+            set { dbPremium += value; }
+        }
+        public void AddCompletedDriver(Driver d)
+        {
+            DriverList.Add(d);
+        }
     }
 }
