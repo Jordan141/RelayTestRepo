@@ -1,2 +1,2 @@
-# RelayInsuranceApp
-Relay Application
+# RelayTestRepo
+Relay Test Application
